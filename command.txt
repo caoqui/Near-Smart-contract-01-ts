@@ -1,0 +1,5 @@
+near view dev-1672909028886-34234816219093 get_all_tokens
+near view dev-1672909028886-34234816219093 get_token_by_id '{"token_id":2}'
+near view dev-1672909028886-34234816219093 get_all_tokens '{"start": 1, "max": 2}'
+near call dev-1672909028886-34234816219093 mint_nft '{"token_owner_id": "caoqui2002.testnet"}' --accountId dev-1672909028886-34234816219093
+near call dev-1672909028886-34234816219093 init '{"owner_id" : "caoqui2002.testnet"}' --accountId dev-1672909028886-34234816219093
