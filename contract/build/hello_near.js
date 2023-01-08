@@ -737,10 +737,12 @@ let Contract = (_dec = NearBindgen({}), _dec2 = initialize(), _dec3 = call({}), 
     this.reference_hash = reference_hash;
   }
   mint_nft({
-    token_owner_id
+    token_owner_id,
+    title,
+    description
   }) {
     this.owner_by_id.set(this.token_id.toString(), token_owner_id);
-    let token = new Token(this.token_id, token_owner_id);
+    let token = new Token(this.token_id, token_owner_id, title, description);
     this.token_by_id.set(this.token_id.toString(), token);
     this.token_id++;
     return token;

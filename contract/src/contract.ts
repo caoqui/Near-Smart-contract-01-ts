@@ -122,12 +122,25 @@ class Contract {
     this.reference_hash = reference_hash;
   }
   @call({})
-  mint_nft({ token_owner_id }) {
+  mint_nft({
+    token_owner_id,
+    title,
+    description,
+  }: {
+    token_owner_id: AccountId;
+    title?: string;
+    description?: string;
+  }) {
     this.owner_by_id.set(
       this.token_id.toString(),
       token_owner_id
     );
-    let token = new Token(this.token_id, token_owner_id);
+    let token = new Token(
+      this.token_id,
+      token_owner_id,
+      title,
+      description
+    );
 
     this.token_by_id.set(this.token_id.toString(), token);
 
