@@ -674,27 +674,67 @@ class LookupMap {
   }
 }
 
-var _dec, _dec2, _dec3, _dec4, _dec5, _class, _class2;
+var _dec, _dec2, _dec3, _dec4, _dec5, _dec6, _dec7, _dec8, _dec9, _dec10, _class, _class2;
 class Token {
-  constructor(token_id, owner_id) {
+  constructor(token_id, owner_id, title, description, media, media_hash, copies, issued_at, expires_at, starts_at, updated_at, extra, reference, reference_hash) {
     this.token_id = token_id;
     this.owner_id = owner_id.toString();
+    this.title = title;
+    this.description = description;
+    this.media = media;
+    this.media_hash = media_hash;
+    this.copies = copies;
+    this.issued_at = issued_at;
+    this.expires_at = expires_at;
+    this.starts_at = starts_at;
+    this.updated_at = updated_at;
+    this.extra = extra;
+    this.reference = reference;
+    this.reference_hash = reference_hash;
   }
 }
-let Contract = (_dec = NearBindgen({}), _dec2 = initialize(), _dec3 = call({}), _dec4 = view(), _dec5 = view(), _dec(_class = (_class2 = class Contract {
+let Contract = (_dec = NearBindgen({}), _dec2 = initialize(), _dec3 = call({}), _dec4 = view(), _dec5 = view(), _dec6 = call({
+  payableFunction: true
+}), _dec7 = call({
+  payableFunction: true
+}), _dec8 = call({
+  payableFunction: true
+}), _dec9 = view(), _dec10 = call({}), _dec(_class = (_class2 = class Contract {
   constructor() {
     this.owner_id = '';
     this.token_id = 0;
     this.owner_by_id = new LookupMap('o');
     this.token_by_id = new LookupMap('t');
+    this.approved_account_ids = new LookupMap('a');
+    this.spec = '1.0.0';
+    this.name = '';
+    this.symbol = '';
+    this.icon = '';
+    this.base_uri = '';
+    this.reference = '';
+    this.reference_hash = '';
   }
   init({
-    owner_id
+    owner_id,
+    name,
+    symbol,
+    icon,
+    base_uri,
+    reference,
+    reference_hash
   }) {
     this.owner_id = owner_id;
     this.token_id = 0;
     this.owner_by_id = new LookupMap('o');
     this.token_by_id = new LookupMap('t');
+    this.approved_account_ids = new LookupMap('a');
+    this.spec = '1.0.0';
+    this.name = name;
+    this.symbol = symbol;
+    this.icon = icon;
+    this.base_uri = base_uri;
+    this.reference = reference;
+    this.reference_hash = reference_hash;
   }
   mint_nft({
     token_owner_id
@@ -721,7 +761,100 @@ let Contract = (_dec = NearBindgen({}), _dec2 = initialize(), _dec3 = call({}), 
     }
     return all_tokens;
   }
-}, (_applyDecoratedDescriptor(_class2.prototype, "init", [_dec2], Object.getOwnPropertyDescriptor(_class2.prototype, "init"), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, "mint_nft", [_dec3], Object.getOwnPropertyDescriptor(_class2.prototype, "mint_nft"), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, "get_token_by_id", [_dec4], Object.getOwnPropertyDescriptor(_class2.prototype, "get_token_by_id"), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, "get_all_tokens", [_dec5], Object.getOwnPropertyDescriptor(_class2.prototype, "get_all_tokens"), _class2.prototype)), _class2)) || _class);
+  nft_approve(token_id, account_id, msg) {
+    if (!msg) {
+      return null;
+    }
+    this.approved_account_ids.set(token_id.toString(), account_id);
+    return this.nft_on_approve(token_id, this.owner_id, this.token_id, msg);
+  }
+  nft_revoke(token_id, account_id) {
+    // this.approved_account_ids.set(token_id.toString(), );
+  }
+  nft_revoke_all(token_id) {
+    return this.approved_account_ids.remove(token_id);
+  }
+  nft_is_approved(token_id, approved_account_id, approval_id) {
+    let rs = this.token_by_id.get(token_id.toString()) || null;
+    if (rs === null) {
+      return false;
+    }
+    // Check approved_account_id existed in rs
+    //code
+
+    return true;
+  }
+  nft_on_approve(token_id, owner_id, approval_id, msg) {}
+}, (_applyDecoratedDescriptor(_class2.prototype, "init", [_dec2], Object.getOwnPropertyDescriptor(_class2.prototype, "init"), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, "mint_nft", [_dec3], Object.getOwnPropertyDescriptor(_class2.prototype, "mint_nft"), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, "get_token_by_id", [_dec4], Object.getOwnPropertyDescriptor(_class2.prototype, "get_token_by_id"), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, "get_all_tokens", [_dec5], Object.getOwnPropertyDescriptor(_class2.prototype, "get_all_tokens"), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, "nft_approve", [_dec6], Object.getOwnPropertyDescriptor(_class2.prototype, "nft_approve"), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, "nft_revoke", [_dec7], Object.getOwnPropertyDescriptor(_class2.prototype, "nft_revoke"), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, "nft_revoke_all", [_dec8], Object.getOwnPropertyDescriptor(_class2.prototype, "nft_revoke_all"), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, "nft_is_approved", [_dec9], Object.getOwnPropertyDescriptor(_class2.prototype, "nft_is_approved"), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, "nft_on_approve", [_dec10], Object.getOwnPropertyDescriptor(_class2.prototype, "nft_on_approve"), _class2.prototype)), _class2)) || _class);
+function nft_on_approve() {
+  const _state = Contract._getState();
+  if (!_state && Contract._requireInit()) {
+    throw new Error("Contract must be initialized");
+  }
+  const _contract = Contract._create();
+  if (_state) {
+    Contract._reconstruct(_contract, _state);
+  }
+  const _args = Contract._getArgs();
+  const _result = _contract.nft_on_approve(_args);
+  Contract._saveToStorage(_contract);
+  if (_result !== undefined) if (_result && _result.constructor && _result.constructor.name === "NearPromise") _result.onReturn();else env.value_return(Contract._serialize(_result, true));
+}
+function nft_is_approved() {
+  const _state = Contract._getState();
+  if (!_state && Contract._requireInit()) {
+    throw new Error("Contract must be initialized");
+  }
+  const _contract = Contract._create();
+  if (_state) {
+    Contract._reconstruct(_contract, _state);
+  }
+  const _args = Contract._getArgs();
+  const _result = _contract.nft_is_approved(_args);
+  if (_result !== undefined) if (_result && _result.constructor && _result.constructor.name === "NearPromise") _result.onReturn();else env.value_return(Contract._serialize(_result, true));
+}
+function nft_revoke_all() {
+  const _state = Contract._getState();
+  if (!_state && Contract._requireInit()) {
+    throw new Error("Contract must be initialized");
+  }
+  const _contract = Contract._create();
+  if (_state) {
+    Contract._reconstruct(_contract, _state);
+  }
+  const _args = Contract._getArgs();
+  const _result = _contract.nft_revoke_all(_args);
+  Contract._saveToStorage(_contract);
+  if (_result !== undefined) if (_result && _result.constructor && _result.constructor.name === "NearPromise") _result.onReturn();else env.value_return(Contract._serialize(_result, true));
+}
+function nft_revoke() {
+  const _state = Contract._getState();
+  if (!_state && Contract._requireInit()) {
+    throw new Error("Contract must be initialized");
+  }
+  const _contract = Contract._create();
+  if (_state) {
+    Contract._reconstruct(_contract, _state);
+  }
+  const _args = Contract._getArgs();
+  const _result = _contract.nft_revoke(_args);
+  Contract._saveToStorage(_contract);
+  if (_result !== undefined) if (_result && _result.constructor && _result.constructor.name === "NearPromise") _result.onReturn();else env.value_return(Contract._serialize(_result, true));
+}
+function nft_approve() {
+  const _state = Contract._getState();
+  if (!_state && Contract._requireInit()) {
+    throw new Error("Contract must be initialized");
+  }
+  const _contract = Contract._create();
+  if (_state) {
+    Contract._reconstruct(_contract, _state);
+  }
+  const _args = Contract._getArgs();
+  const _result = _contract.nft_approve(_args);
+  Contract._saveToStorage(_contract);
+  if (_result !== undefined) if (_result && _result.constructor && _result.constructor.name === "NearPromise") _result.onReturn();else env.value_return(Contract._serialize(_result, true));
+}
 function get_all_tokens() {
   const _state = Contract._getState();
   if (!_state && Contract._requireInit()) {
@@ -774,5 +907,5 @@ function init() {
   if (_result !== undefined) if (_result && _result.constructor && _result.constructor.name === "NearPromise") _result.onReturn();else env.value_return(Contract._serialize(_result, true));
 }
 
-export { get_all_tokens, get_token_by_id, init, mint_nft };
+export { get_all_tokens, get_token_by_id, init, mint_nft, nft_approve, nft_is_approved, nft_on_approve, nft_revoke, nft_revoke_all };
 //# sourceMappingURL=hello_near.js.map

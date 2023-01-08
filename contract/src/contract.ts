@@ -79,23 +79,48 @@ class Contract {
     this.token_id = 0;
     this.owner_by_id = new LookupMap('o');
     this.token_by_id = new LookupMap('t');
+    this.approved_account_ids = new LookupMap('a');
 
     this.spec = '1.0.0';
     this.name = '';
-    this.name = '';
+    this.symbol = '';
+    this.icon = '';
+    this.base_uri = '';
+    this.reference = '';
+    this.reference_hash = '';
   }
   @initialize({})
-  init({ owner_id }: { owner_id: AccountId }) {
+  init({
+    owner_id,
+    name,
+    symbol,
+    icon,
+    base_uri,
+    reference,
+    reference_hash,
+  }: {
+    owner_id: AccountId;
+    name: string;
+    symbol: string;
+    icon?: string;
+    base_uri?: string;
+    reference?: string;
+    reference_hash?: string;
+  }) {
     this.owner_id = owner_id;
     this.token_id = 0;
     this.owner_by_id = new LookupMap('o');
     this.token_by_id = new LookupMap('t');
+    this.approved_account_ids = new LookupMap('a');
 
     this.spec = '1.0.0';
-    this.name = '';
-    this.name = '';
+    this.name = name;
+    this.symbol = symbol;
+    this.icon = icon;
+    this.base_uri = base_uri;
+    this.reference = reference;
+    this.reference_hash = reference_hash;
   }
-
   @call({})
   mint_nft({ token_owner_id }) {
     this.owner_by_id.set(
